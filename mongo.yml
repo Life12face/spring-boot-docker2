@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+# Specifies the API version for this ReplicaSet configuration.
+kind: ReplicaSet
+# Specifies the kind of resource, which is a ReplicaSet.
+
+metadata:
+  name: mongodb
+  # Assigns a name to the ReplicaSet resource.
+
+spec:
+  # Specifies the specifications for the ReplicaSet.
+
+  selector:
+    matchLabels:
+      app: mongo
+    # Selects pods with labels matching "app: mongo".
+
+  template:
+    # Specifies the template for creating pods.
+
+    metadata:
+      name: myapp
+      # Assigns a name to the pod's metadata.
+      labels:
+        app: mongo
+        # Labels applied to the pod.
+
+    spec:
+      # Specifies the specifications for the pod.
+
+      containers:
+      - name: mongodbcontainer
+        # Assigns a name to the container.
+        image: mongo
+        # Specifies the Docker image to use for the container.
+        ports:
+        - containerPort: 27017
+          # Specifies the port that the container listens on.
+
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: devdb
+          # Specifies an environment variable for the container.
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: devdb@123
+          # Specifies another environment variable for the container.
+
+---
+# A separator to indicate the end of the previous resource configuration.
+
+apiVersion: v1
+# Specifies the API version for this Service configuration.
+kind: Service
+# Specifies the kind of resource, which is a Service.
+
+metadata:
+  name: mongosvc
+  # Assigns a name to the Service resource.
+
+spec:
+  # Specifies the specifications for the Service.
+
+  type: ClusterIP
+  # Specifies the type of Service, which is ClusterIP.
+
+  selector:
+    app: mongo
+    # Selects pods with the label "app: mongo".
+
+  ports:
+  - port: 27017
+    targetPort: 27017
+    # Maps incoming traffic on port 27017 to the pods' target port 27017.
