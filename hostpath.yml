@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: mongodb
+spec:
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      name: myapp
+      labels:
+        app: mongo
+    spec:
+      volumes:
+      - name: mogodbhostvol
+        hostPath:
+          path: /mongodata  # Mounts host directory /mongodata as volume mogodbhostvol
+      - name: vol2
+        hostPath:
+          path: /tmp/data   # Mounts host directory /tmp/data as volume vol2
+      containers:
+      - name: mongodbcontainer
+        image: mongo        # Specifies the Docker image to use for the container
+        ports:
+        - containerPort: 27017  # Exposes container port 27017
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: devdb        # Sets environment variable MONGO_INITDB_ROOT_USERNAME
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: devdb@123    # Sets environment variable MONGO_INITDB_ROOT_PASSWORD
+        volumeMounts:
+        - name: mogodbhostvol  # Mounts volume mogodbhostvol to /data/db within the container
+          mountPath: /data/db
+        - name: vol2            # Mounts volume vol2 to /data/db within the container
+          mountPath: /data/db
