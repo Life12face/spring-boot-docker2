@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+# Specifies the API version for this Deployment configuration.
+kind: Deployment
+# Specifies the kind of resource, which is a Deployment.
+
+metadata:
+  name: springapp
+  # Assigns a name to the Deployment resource.
+
+spec:
+  # Specifies the specifications for the Deployment.
+
+  replicas: 2
+  # Specifies that there should be 2 replicas (pods) of the application.
+
+  selector:
+    matchLabels:
+      app: springapp
+    # Selects pods with labels matching "app: springapp".
+
+  template:
+    # Specifies the template for creating pods.
+
+    metadata:
+      labels:
+        app: springapp
+        # Labels applied to the pods.
+
+    spec:
+      # Specifies the specifications for the pod.
+
+      containers:
+      - name: springappcontainer
+        # Assigns a name to the container.
+        image: mylandmarktech/spring-boot-mongo
+        # Specifies the Docker image to use for the container.
+        ports:
+        - containerPort: 8080
+          # Specifies the port that the container listens on.
+
+        env:
+        - name: MONGO_DB_HOSTNAME
+          value: mongosvc
+          # Specifies an environment variable for the container.
+        - name: MONGO_DB_USERNAME
+          value: devdb
+          # Specifies another environment variable for the container.
